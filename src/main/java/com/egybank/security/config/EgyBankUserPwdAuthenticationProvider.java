@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import com.egybank.dal.entities.Authority;
 import com.egybank.dal.entities.Customer;
 import com.egybank.dal.repositories.CustomerRepository;
 
@@ -39,12 +40,17 @@ public class EgyBankUserPwdAuthenticationProvider implements AuthenticationProvi
 			throw new BadCredentialsException("Invalid details");
 		}
 
-		List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(customers.get(0).getRole()));
-
 		// TODO: Do second factor authentication
 
-		return new UsernamePasswordAuthenticationToken(username, password, authorities);
+		return new UsernamePasswordAuthenticationToken(username, password, extractAuthorities(customers.get(0)));
+	}
+
+	private List<GrantedAuthority> extractAuthorities(Customer customer) {
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		for (Authority authority : customer.getAuthorities()) {
+			authorities.add(new SimpleGrantedAuthority(authority.getName()));
+		}
+		return authorities;
 	}
 
 	@Override

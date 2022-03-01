@@ -3,16 +3,18 @@ package com.egybank.dal.entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class Accounts {
+@Table(name = "accounts")
+public class Account {
 
 	@Id
 	@Column(name = "account_number")
 	private long accountNumber;
 
 	@Column(name = "customer_id")
-	private int customerId;
+	private long customerId;
 
 	@Column(name = "account_type")
 	private String accountType;
@@ -23,11 +25,11 @@ public class Accounts {
 	@Column(name = "create_dt")
 	private String createDt;
 
-	public int getCustomerId() {
+	public long getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(int customerId) {
+	public void setCustomerId(long customerId) {
 		this.customerId = customerId;
 	}
 

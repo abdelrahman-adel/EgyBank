@@ -19,7 +19,7 @@ public class Cards {
 	private int cardId;
 
 	@Column(name = "customer_id")
-	private int customerId;
+	private long customerId;
 
 	@Column(name = "card_number")
 	private String cardNumber;
@@ -47,11 +47,11 @@ public class Cards {
 		this.cardId = cardId;
 	}
 
-	public int getCustomerId() {
+	public long getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(int customerId) {
+	public void setCustomerId(long customerId) {
 		this.customerId = customerId;
 	}
 

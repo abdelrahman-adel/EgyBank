@@ -1,10 +1,16 @@
 package com.egybank.dal.entities;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Customer {
@@ -23,14 +29,16 @@ public class Customer {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 
+	@JsonIgnore
 	@Column(name = "pwd")
 	private String pwd;
 
-	@Column(name = "role")
-	private String role;
-
 	@Column(name = "create_dt")
 	private String createDt;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "customer", fetch = FetchType.EAGER)
+	private Set<Authority> authorities;
 
 	public long getId() {
 		return id;
@@ -72,19 +80,19 @@ public class Customer {
 		this.pwd = pwd;
 	}
 
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	public String getCreateDt() {
 		return createDt;
 	}
 
 	public void setCreateDt(String createDt) {
 		this.createDt = createDt;
+	}
+
+	public Set<Authority> getAuthorities() {
+		return authorities;
+	}
+
+	public void setAuthorities(Set<Authority> authorities) {
+		this.authorities = authorities;
 	}
 }

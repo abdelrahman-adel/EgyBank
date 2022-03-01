@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.egybank.dal.entities.Accounts;
+import com.egybank.dal.entities.Account;
 import com.egybank.dal.entities.Customer;
 import com.egybank.dal.repositories.AccountsRepository;
 
@@ -16,7 +16,7 @@ public class AccountsController {
 	private AccountsRepository accountsRepository;
 
 	@PostMapping("/accounts")
-	public Accounts getAccountDetails(@RequestBody Customer customer) {
+	public Account getAccountDetails(@RequestBody Customer customer) {
 		return accountsRepository.findByCustomerId(customer.getId());
 	}
 

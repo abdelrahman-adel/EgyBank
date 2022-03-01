@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.egybank.dal.entities.Authority;
 import com.egybank.dal.entities.Customer;
 
 public class SecurityCustomer implements UserDetails {
@@ -26,7 +27,9 @@ public class SecurityCustomer implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(customer.getRole()));
+		for (Authority authority : customer.getAuthorities()) {
+			authorities.add(new SimpleGrantedAuthority(authority.getName()));
+		}
 		return authorities;
 	}
 

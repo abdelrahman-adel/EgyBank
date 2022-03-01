@@ -18,7 +18,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
  * @author Abdelrahman
  *
  */
-public class SecurityConfigV3 extends WebSecurityConfigurerAdapter {
+public class SecurityConfigV03 extends WebSecurityConfigurerAdapter {
 
 	// @formatter:off
 	@Override

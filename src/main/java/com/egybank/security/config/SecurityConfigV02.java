@@ -2,21 +2,22 @@ package com.egybank.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
- * Here we are simply filtering which requests should be authenticated and which
- * not, we are using {@link InMemoryUserDetailsManagerConfigurer} with "no"
- * password encoder.
+ * Here we have the simple filtration same as previous version, we are using
+ * {@link InMemoryUserDetailsManager} with "no" password encoder.
  * 
  * @author Abdelrahman
  *
  */
-public class SecurityConfigV1 extends WebSecurityConfigurerAdapter {
+public class SecurityConfigV02 extends WebSecurityConfigurerAdapter {
 
 	// @formatter:off
 	@Override
@@ -27,22 +28,16 @@ public class SecurityConfigV1 extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated()); // Must be authenticated to pass
 		http.formLogin();
 		http.httpBasic();
-
-		// Another way to do the same
-
-//		http.authorizeRequests().antMatchers("/public").permitAll() // Always passes
-//				.antMatchers("/secret").denyAll() // Always fails
-//				.anyRequest().authenticated() // Must be authenticated to pass
-//				.and().formLogin()
-//				.and().httpBasic();
 	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
-			.withUser("admin").password("12345").authorities("admin")
-			.and().withUser("user").password("12345").authorities("read")
-			.and().passwordEncoder(passwordEncoder());
+		InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
+		UserDetails admin = User.withUsername("admin").password("12345").authorities("admin").build();
+		UserDetails user = User.withUsername("user").password("12345").authorities("read").build();
+		userDetailsManager.createUser(admin);
+		userDetailsManager.createUser(user);
+		auth.userDetailsService(userDetailsManager);
 	}
 	// @formatter:on
 

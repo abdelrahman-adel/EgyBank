@@ -1,21 +1,30 @@
 package com.egybank.security.config;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 /**
- * Here we have the simple filtration same as previous version, we are using our
- * own customizations like {@link EgyBankUserDetailService} or
+ * Here we have changed the filtering, same as before but we added part for CORS
+ * policy, and disabled CSRF, we are using our own customizations like
+ * {@link EgyBankUserDetailService} or
  * {@link EgyBankUserPwdAuthenticationProvider} with
  * {@link SCryptPasswordEncoder} password encoder.
+ * 
+ * CORS: Cross Origin Resource Sharing
+ * 
+ * CSRF: Cross Site Request Forgery
  * 
  * @author Abdelrahman
  *
  */
-public class SecurityConfigV4 extends WebSecurityConfigurerAdapter {
+public class SecurityConfigV05 extends WebSecurityConfigurerAdapter {
 
 	// @formatter:off
 	@Override
@@ -24,6 +33,18 @@ public class SecurityConfigV4 extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests((requests) -> requests.antMatchers("/public/*").permitAll() // Always passes
 				.antMatchers("/secret").denyAll() // Always fails
 				.anyRequest().authenticated()); // Must be authenticated to pass
+		http.cors().configurationSource(new CorsConfigurationSource() {
+			@Override
+			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+				CorsConfiguration corsConfig = new CorsConfiguration();
+				corsConfig.addAllowedOrigin("http://localhost:4200");
+				corsConfig.addAllowedMethod("*");
+				corsConfig.addAllowedHeader("*");
+				corsConfig.setAllowCredentials(true);
+				return corsConfig;
+			}
+		});
+		http.csrf().disable();
 		http.formLogin();
 		http.httpBasic();
 	}
